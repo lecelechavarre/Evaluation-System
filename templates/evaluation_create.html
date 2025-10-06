@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Create Evaluation{% endblock %}
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-plus"></i> Create New Evaluation</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('evaluations_create') }}">
+            <div class="mb-3">
+                <label for="employee_id" class="form-label">Employee *</label>
+                <select class="form-select" id="employee_id" name="employee_id" required>
+                    <option value="">Select employee...</option>
+                    {% for emp in employees %}
+                    <option value="{{ emp.id }}">{{ emp.full_name }} ({{ emp.username }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <h5 class="mt-4 mb-3">Performance Scores</h5>
+            <p class="text-muted">Rate each criterion from {{ min_rating }} to {{ max_rating }}</p>
+            
+            {% for criterion in criteria %}
+            <div class="mb-3">
+                <label for="score_{{ criterion.id }}" class="form-label">
+                    {{ criterion.name }} 
+                    <small class="text-muted">(Weight: {{ criterion.weight }})</small>
+                </label>
+                {% if criterion.description %}
+                <p class="small text-muted">{{ criterion.description }}</p>
+                {% endif %}
+                <input type="number" class="form-control" id="score_{{ criterion.id }}" 
+                       name="score_{{ criterion.id }}" min="{{ min_rating }}" max="{{ max_rating }}" required>
+            </div>
+            {% endfor %}
+
+            <div class="mb-3">
+                <label for="comments" class="form-label">Comments</label>
+                <textarea class="form-control" id="comments" name="comments" rows="4" 
+                          placeholder="Provide detailed feedback..."></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="status" class="form-label">Status *</label>
+                <select class="form-select" id="status" name="status" required>
+                    <option value="draft">Draft</option>
+                    <option value="final">Final</option>
+                </select>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Evaluation
+                </button>
+                <a href="{{ url_for('evaluations_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

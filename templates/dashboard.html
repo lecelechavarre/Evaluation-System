@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-home"></i> Dashboard</h1>
+
+{% if role == 'admin' %}
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ total_users }}</h3>
+            <p class="mb-0"><i class="fas fa-users"></i> Total Users</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ total_evaluations }}</h3>
+            <p class="mb-0"><i class="fas fa-clipboard-list"></i> Evaluations</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ total_criteria }}</h3>
+            <p class="mb-0"><i class="fas fa-list-check"></i> Criteria</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fas fa-clock"></i> Recent Evaluations</h5>
+    </div>
+    <div class="card-body">
+        {% if recent_evaluations %}
+        <div class="list-group">
+            {% for eval in recent_evaluations %}
+            <a href="{{ url_for('evaluations_view', eval_id=eval.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{ eval.id }}</h6>
+                    <small>{{ eval.date }}</small>
+                </div>
+                <p class="mb-1">Status: <span class="badge bg-{{ 'success' if eval.status == 'final' else 'warning' }}">{{ eval.status }}</span></p>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No evaluations yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% elif role == 'evaluator' %}
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ my_evaluations }}</h3>
+            <p class="mb-0"><i class="fas fa-clipboard-list"></i> My Evaluations</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ total_employees }}</h3>
+            <p class="mb-0"><i class="fas fa-users"></i> Employees</p>
+        </div>
+    </div>
+</div>
+
+<div class="mb-3">
+    <a href="{{ url_for('evaluations_create') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> New Evaluation
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fas fa-clock"></i> Recent Evaluations</h5>
+    </div>
+    <div class="card-body">
+        {% if recent_evaluations %}
+        <div class="list-group">
+            {% for eval in recent_evaluations %}
+            <a href="{{ url_for('evaluations_view', eval_id=eval.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{ eval.id }}</h6>
+                    <small>{{ eval.date }}</small>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No evaluations yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% else %}
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ summary.total_evaluations }}</h3>
+            <p class="mb-0"><i class="fas fa-clipboard-list"></i> My Evaluations</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="stat-card">
+            <h3 class="mb-0">{{ "%.2f"|format(summary.average_score) }}</h3>
+            <p class="mb-0"><i class="fas fa-star"></i> Average Score</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5><i class="fas fa-list"></i> My Evaluations</h5>
+    </div>
+    <div class="card-body">
+        {% if my_evaluations %}
+        <div class="list-group">
+            {% for eval in my_evaluations %}
+            <a href="{{ url_for('evaluations_view', eval_id=eval.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">{{ eval.date }}</h6>
+                    <span class="badge bg-{{ 'success' if eval.status == 'final' else 'warning' }}">{{ eval.status }}</span>
+                </div>
+                <p class="mb-1 text-muted">{{ eval.comments[:50] }}...</p>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No evaluations yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

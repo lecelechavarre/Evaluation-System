@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Create Criterion{% endblock %}
+{% block content %}
+<h1 class="mb-4"><i class="fas fa-plus"></i> Create New Criterion</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('criteria_create') }}">
+            <div class="mb-3">
+                <label for="name" class="form-label">Criterion Name *</label>
+                <input type="text" class="form-control" id="name" name="name" required minlength="2">
+            </div>
+
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight *</label>
+                <input type="number" class="form-control" id="weight" name="weight" value="1.0" step="0.1" min="0.1" required>
+                <small class="text-muted">Higher weight means more important</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Criterion
+                </button>
+                <a href="{{ url_for('criteria_list') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
